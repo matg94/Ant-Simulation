@@ -21,13 +21,3 @@ class Timer:
             return True
         self.current_time = time.time()
         return False
-
-if __name__ == "__main__":
-    timer = Timer(1)
-    first = timer.update()
-    time.sleep(1)
-    second = timer.update()
-    print("TIMER TEST PASSED: ", (first == False and second == True))
-    test_a = (0, 0)
-    test_b = (4, 3)
-    print("DISTANCE TEST PASSED:", get_distance(test_a, test_b) == 5)
