@@ -25,10 +25,3 @@ class Object:
         if distance <= total_radius:
             return True
         return False
-
-if __name__ == "__main__":
-    obj_a = Object.create_static_object(0, 0, 10)
-    obj_b = Object.create_static_object(0, 15, 6)
-    print("COLLISION TEST PASSED:", obj_a.check_radius_collision(obj_b))
-    obj_b = Object.create_static_object(0, 15, 4)
-    print("NO COLLISION TEST PASSED:", not obj_a.check_radius_collision(obj_b))
