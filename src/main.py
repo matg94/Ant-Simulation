@@ -12,4 +12,6 @@ if __name__ == "__main__":
         screen.fill((255,255,255))
 
 
+        # Update Loop
+
         pygame.display.flip()
