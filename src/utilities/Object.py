@@ -8,9 +8,8 @@ class Object:
         self.y = start_y
         self.radius = radius
         self.direction_angle = 0
+        self.static = is_static
         if not is_static:
-            self.vel_x = 0
-            self.vel_y = 0
             self.velocity = velocity
 
     @classmethod
@@ -37,3 +36,11 @@ class Object:
         if collision_angle >= min_collision_angle and collision_angle <= max_collision_angle:
             return True
         return False
+
+    def update_position(self, time_since_last_update):
+        if self.static:
+            return
+        vel_x = self.velocity * math.cos(self.direction_angle)
+        vel_y = self.velocity * math.sin(self.direction_angle)
+        self.x += vel_x * time_since_last_update
+        self.y += vel_y * time_since_last_update

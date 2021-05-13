@@ -47,6 +47,12 @@ class UtilitiesTests(unittest.TestCase):
         angle = get_angle(point_a, point_b)
         self.assertEqual(angle, (3/4)*math.pi)
 
+    def test_position_change(self):
+        obj_a = Object.create_dynamic_object(0,0,1,1)
+        obj_a.update_position(1)
+        self.assertEqual(obj_a.x, 1, "x position should be 1")
+        self.assertEqual(obj_a.y, 0, "y position should be 0")
+
     def test_timer(self):
         timer = Timer(0.05)
         self.assertFalse(timer.update())
