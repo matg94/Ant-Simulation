@@ -1,6 +1,7 @@
 import utilities
 import math
 
+
 class Object:
 
     def __init__(self, start_x, start_y, radius, velocity):
@@ -11,8 +12,10 @@ class Object:
         self.velocity = velocity
 
     def check_radius_collision(self, target_object, scan_radius=False):
-        distance = utilities.get_distance((self.x, self.y), (target_object.x, target_object.y))
-        total_radius = (self.radius if not scan_radius else scan_radius) + target_object.radius
+        target_loc = (target_object.x, target_object.y)
+        distance = utilities.get_distance((self.x, self.y), target_loc)
+        radius = self.radius if not scan_radius else scan_radius
+        total_radius = radius + target_object.radius
         if distance <= total_radius:
             return True
         return False
@@ -20,10 +23,13 @@ class Object:
     def check_cone_collision(self, target_object, scan_radius, scan_angle):
         if not self.check_radius_collision(target_object, scan_radius):
             return False
-        collision_angle = utilities.get_angle((self.x, self.y),(target_object.x, target_object.y))
+        target_coord = (target_object.x, target_object.y)
+        collision_angle = utilities.get_angle((self.x, self.y), target_coord)
         min_collision_angle = self.direction_angle - scan_angle / 2.0
         max_collision_angle = self.direction_angle + scan_angle / 2.0
-        if collision_angle >= min_collision_angle and collision_angle <= max_collision_angle:
+        above_min = collision_angle >= min_collision_angle
+        below_max = collision_angle <= max_collision_angle
+        if above_min and below_max:
             return True
         return False
 

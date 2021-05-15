@@ -4,6 +4,7 @@ from utilities import Timer, get_distance, get_angle
 import time
 import math
 
+
 class UtilitiesTests(unittest.TestCase):
 
     def test_collision(self):
@@ -17,8 +18,8 @@ class UtilitiesTests(unittest.TestCase):
         self.assertFalse(obj_a.check_radius_collision(obj_b))
 
     def test_distance(self):
-        point_a = (0,0)
-        point_b = (4,3)
+        point_a = (0, 0)
+        point_b = (4, 3)
         distance = get_distance(point_a, point_b)
         self.assertEqual(distance, 5, "Distance should be 5")
 
@@ -36,14 +37,14 @@ class UtilitiesTests(unittest.TestCase):
         self.assertTrue(collision)
 
     def test_angle_positive(self):
-        point_a = (0,0)
-        point_b = (1,1)
+        point_a = (0, 0)
+        point_b = (1, 1)
         angle = get_angle(point_a, point_b)
         self.assertEqual(angle, math.pi / 4)
 
     def test_angle_negative(self):
-        point_a = (0,0)
-        point_b = (-1,1)
+        point_a = (0, 0)
+        point_b = (-1, 1)
         angle = get_angle(point_a, point_b)
         self.assertEqual(angle, (3/4)*math.pi)
 
@@ -53,7 +54,7 @@ class UtilitiesTests(unittest.TestCase):
         self.assertEqual(obj_a.x, 1, "x position should be 1")
         self.assertEqual(obj_a.y, 0, "y position should be 0")
 
-    def test_handle_edge_collision_x(self):
+    def test_handle_edge_collision(self):
         obj = Object(8, 5, 1, 1)
         obj.handle_edge_collision(0, 11, 0, 10)
         # Assert no change from no collision
@@ -63,11 +64,24 @@ class UtilitiesTests(unittest.TestCase):
         obj.handle_edge_collision(0, 11, 0, 10)
         self.assertEqual(obj.x, 9, "x position should be 9")
 
+    def test_angle_change_from_edge_collision(self):
+        obj = Object(8, 5, 1, 1)
+        obj.inverse_velocity_edge_collision(True)
+        error = "New angle should equal Pi"
+        self.assertEqual(obj.direction_angle, math.pi, error)
+        obj.direction_angle = (5/4 * math.pi)
+        obj.inverse_velocity_edge_collision(False)
+        obj_angle = round(obj.direction_angle, 3)
+        expected_angle = round((3/4)*math.pi, 3)
+        error = "New angle should equal (3pi/4)"
+        self.assertEqual(obj_angle, expected_angle, error)
+
     def test_timer(self):
         timer = Timer(0.05)
         self.assertFalse(timer.update())
         time.sleep(0.05)
         self.assertTrue(timer.update())
+
 
 if __name__ == "__main__":
     unittest.main()
