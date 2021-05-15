@@ -11,7 +11,7 @@ class UtilitiesTests(unittest.TestCase):
         obj_a = Object(0, 0, 10, 0)
         obj_b = Object(0, 15, 6, 0)
         self.assertTrue(obj_a.check_radius_collision(obj_b))
-   
+
     def test_no_collision(self):
         obj_a = Object(0, 0, 10, 0)
         obj_b = Object(0, 15, 4, 0)
@@ -57,24 +57,26 @@ class UtilitiesTests(unittest.TestCase):
     def test_handle_edge_collision(self):
         obj = Object(8, 5, 1, 1)
         obj.handle_edge_collision(0, 11, 0, 10)
-        # Assert no change from no collision
         self.assertEqual(obj.x, 8, "x position should be 9")
-        # Assert collision blocks movement
+
         obj.update_position(2)
         obj.handle_edge_collision(0, 11, 0, 10)
         self.assertEqual(obj.x, 9, "x position should be 9")
 
     def test_angle_change_from_edge_collision(self):
-        obj = Object(8, 5, 1, 1)
-        obj.inverse_velocity_edge_collision(True)
+        obj = Object(9, 4, 1, 1)
+        obj.handle_edge_collision(0, 8, 0, 8)
         error = "New angle should equal Pi"
-        self.assertEqual(obj.direction_angle, math.pi, error)
-        obj.direction_angle = (5/4 * math.pi)
-        obj.inverse_velocity_edge_collision(False)
-        obj_angle = round(obj.direction_angle, 3)
-        expected_angle = round((3/4)*math.pi, 3)
+        new_angle = round(obj.direction_angle, 2)
+        self.assertEqual(new_angle, round(math.pi, 2), error)
+        # Check y - collision
+        obj_b = Object(4, 9, 1, 1)
+        obj_b.direction_angle = (5/4 * math.pi)
+        obj_b.handle_edge_collision(0, 8, 0, 8)
+        objb_angle = round(obj_b.direction_angle, 2)
+        expected_angle = round((3/4)*math.pi, 2)
         error = "New angle should equal (3pi/4)"
-        self.assertEqual(obj_angle, expected_angle, error)
+        self.assertEqual(objb_angle, expected_angle, error)
 
     def test_timer(self):
         timer = Timer(0.05)

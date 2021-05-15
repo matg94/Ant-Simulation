@@ -33,25 +33,29 @@ class Object:
             return True
         return False
 
-    def inverse_velocity_edge_collision(self, vertical_wall):
+    def inverse_velocity_edge_collision(self, hit_x_limit):
         vel_x = math.cos(self.direction_angle) * self.velocity
         vel_y = math.sin(self.direction_angle) * self.velocity
-        if vertical_wall:
+        if hit_x_limit:
             vel_x = -1 * vel_x
         else:
             vel_y = -1 * vel_y
-        new_angle = math.atan2(vel_y, vel_x)
+        new_angle = utilities.get_angle((0, 0), (vel_x, vel_y))
         self.direction_angle = new_angle
 
     def handle_edge_collision(self, min_x, max_x, min_y, max_y):
         if self.x - self.radius <= min_x:
             self.x = min_x + self.radius + 1
+            self.inverse_velocity_edge_collision(True)
         elif self.x + self.radius >= max_x:
             self.x = max_x - self.radius - 1
+            self.inverse_velocity_edge_collision(True)
         if self.y - self.radius <= min_y:
             self.y = min_y + self.radius + 1
+            self.inverse_velocity_edge_collision(False)
         elif self.y + self.radius >= max_y:
             self.y = max_y - self.radius + 1
+            self.inverse_velocity_edge_collision(False)
 
     def update_position(self, time_since_last_update):
         vel_x = self.velocity * math.cos(self.direction_angle)
