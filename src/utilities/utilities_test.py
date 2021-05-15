@@ -57,7 +57,7 @@ class UtilitiesTests(unittest.TestCase):
     def test_handle_edge_collision(self):
         obj = Object(8, 5, 1, 1)
         obj.handle_edge_collision(0, 11, 0, 10)
-        self.assertEqual(obj.x, 8, "x position should be 9")
+        self.assertEqual(obj.x, 8, "x position should be 8")
 
         obj.update_position(2)
         obj.handle_edge_collision(0, 11, 0, 10)
