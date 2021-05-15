@@ -3,22 +3,12 @@ import math
 
 class Object:
 
-    def __init__(self, start_x, start_y, radius, velocity, is_static):
+    def __init__(self, start_x, start_y, radius, velocity):
         self.x = start_x
         self.y = start_y
         self.radius = radius
         self.direction_angle = 0
-        self.static = is_static
-        if not is_static:
-            self.velocity = velocity
-
-    @classmethod
-    def create_static_object(cls, start_x, start_y, radius):
-        return cls(start_x, start_y, radius, 0, True)
-
-    @classmethod
-    def create_dynamic_object(cls, start_x, start_y, radius, velocity):
-        return cls(start_x, start_y, radius, velocity, False)
+        self.velocity = velocity
 
     def check_radius_collision(self, target_object, scan_radius=False):
         distance = utilities.get_distance((self.x, self.y), (target_object.x, target_object.y))
@@ -37,9 +27,27 @@ class Object:
             return True
         return False
 
+    def inverse_velocity_edge_collision(self, vertical_wall):
+        vel_x = math.cos(self.direction_angle) * self.velocity
+        vel_y = math.sin(self.direction_angle) * self.velocity
+        if vertical_wall:
+            vel_x = -1 * vel_x
+        else:
+            vel_y = -1 * vel_y
+        new_angle = math.atan2(vel_y, vel_x)
+        self.direction_angle = new_angle
+
+    def handle_edge_collision(self, min_x, max_x, min_y, max_y):
+        if self.x - self.radius <= min_x:
+            self.x = min_x + self.radius + 1
+        elif self.x + self.radius >= max_x:
+            self.x = max_x - self.radius - 1
+        if self.y - self.radius <= min_y:
+            self.y = min_y + self.radius + 1
+        elif self.y + self.radius >= max_y:
+            self.y = max_y - self.radius + 1
+
     def update_position(self, time_since_last_update):
-        if self.static:
-            return
         vel_x = self.velocity * math.cos(self.direction_angle)
         vel_y = self.velocity * math.sin(self.direction_angle)
         self.x += vel_x * time_since_last_update

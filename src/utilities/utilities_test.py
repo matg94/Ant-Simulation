@@ -7,13 +7,13 @@ import math
 class UtilitiesTests(unittest.TestCase):
 
     def test_collision(self):
-        obj_a = Object.create_static_object(0, 0, 10)
-        obj_b = Object.create_static_object(0, 15, 6)
+        obj_a = Object(0, 0, 10, 0)
+        obj_b = Object(0, 15, 6, 0)
         self.assertTrue(obj_a.check_radius_collision(obj_b))
    
     def test_no_collision(self):
-        obj_a = Object.create_static_object(0, 0, 10)
-        obj_b = Object.create_static_object(0, 15, 4)
+        obj_a = Object(0, 0, 10, 0)
+        obj_b = Object(0, 15, 4, 0)
         self.assertFalse(obj_a.check_radius_collision(obj_b))
 
     def test_distance(self):
@@ -23,15 +23,15 @@ class UtilitiesTests(unittest.TestCase):
         self.assertEqual(distance, 5, "Distance should be 5")
 
     def test_cone_collision_angle_edge(self):
-        obj_a = Object.create_static_object(0, 0, 1)
-        obj_b = Object.create_static_object(2, 2, 1)
+        obj_a = Object(0, 0, 1, 0)
+        obj_b = Object(2, 2, 1, 0)
         collision = obj_a.check_cone_collision(obj_b, 2, math.pi / 2)
         self.assertTrue(collision)
 
     def test_cone_collision_angle_edge_with_direction(self):
-        obj_a = Object.create_static_object(0, 0, 1)
+        obj_a = Object(0, 0, 1, 0)
         obj_a.direction_angle = (3/4) * math.pi
-        obj_b = Object.create_static_object(-2, 2, 1)
+        obj_b = Object(-2, 2, 1, 0)
         collision = obj_a.check_cone_collision(obj_b, 2, math.pi / 12)
         self.assertTrue(collision)
 
@@ -48,10 +48,20 @@ class UtilitiesTests(unittest.TestCase):
         self.assertEqual(angle, (3/4)*math.pi)
 
     def test_position_change(self):
-        obj_a = Object.create_dynamic_object(0,0,1,1)
+        obj_a = Object(0, 0, 1, 1)
         obj_a.update_position(1)
         self.assertEqual(obj_a.x, 1, "x position should be 1")
         self.assertEqual(obj_a.y, 0, "y position should be 0")
+
+    def test_handle_edge_collision_x(self):
+        obj = Object(8, 5, 1, 1)
+        obj.handle_edge_collision(0, 11, 0, 10)
+        # Assert no change from no collision
+        self.assertEqual(obj.x, 8, "x position should be 9")
+        # Assert collision blocks movement
+        obj.update_position(2)
+        obj.handle_edge_collision(0, 11, 0, 10)
+        self.assertEqual(obj.x, 9, "x position should be 9")
 
     def test_timer(self):
         timer = Timer(0.05)
